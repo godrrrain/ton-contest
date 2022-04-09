@@ -1,0 +1,56 @@
+"Asm.fif" include
+// automatically generated from `C:\Users\vovad\AppData\Local\toncli\toncli\func-libs\stdlib-tests.func` `C:\filesOfProgr\SmartContracts\task-2\func\code.fc` 
+PROGRAM{
+  DECLPROC load_data
+  DECLPROC parse_sender_address
+  DECLPROC recv_internal
+  load_data PROC:<{
+    // 
+    c4 PUSH	//  _1
+    CTOS	//  ds
+    LDMSGADDR	//  _6 _5
+    DROP	//  _3
+  }>
+  parse_sender_address PROC:<{
+    //  in_msg_full
+    CTOS	//  cs
+    4 LDU	//  _11 _10
+    NIP	//  cs
+    LDMSGADDR	//  _13 _12
+    DROP	//  sender_address
+  }>
+  recv_internal PROC:<{
+    //  balance msg_value in_msg_full in_msg_body
+    s3 POP
+    NIP	//  in_msg_body in_msg_full
+    parse_sender_address CALLDICT	//  in_msg_body sender_address
+    load_data CALLDICT	//  in_msg_body sender_address owner_address
+    2DUP	//  in_msg_body sender_address owner_address sender_address owner_address
+    SDEQ	//  in_msg_body sender_address owner_address check
+    0 NEQINT	//  in_msg_body sender_address owner_address _11
+    IF:<{	//  in_msg_body sender_address owner_address
+      NEWC	//  in_msg_body sender_address owner_address _13
+      s0 s3 XCHG2	//  owner_address sender_address _13 in_msg_body
+      STSLICER	//  owner_address sender_address _14
+      ENDC	//  owner_address sender_address _15
+      0 PUSHINT	//  owner_address sender_address _15 _16=0
+      16 PUSHINT	//  owner_address sender_address _15 _16=0 _17=16
+      NEWC	//  owner_address sender_address _15 _16=0 _17=16 _18
+      6 STU	//  owner_address sender_address _15 _16=0 _20
+      s0 s4 XCHG2	//  _16=0 sender_address _15 _20 owner_address
+      STSLICER	//  _16=0 sender_address _15 _21
+      s3 PUSH	//  _16=0 sender_address _15 _21 _22=0
+      STGRAMS	//  _16=0 sender_address _15 _23
+      s1 s3 XCHG	//  _15 sender_address _16=0 _23
+      107 STU	//  _15 sender_address _37
+      SWAP	//  _15 _37 sender_address
+      STSLICER	//  _15 _38
+      STREF	//  _39
+      ENDC	//  msg
+      64 PUSHINT	//  msg _41=64
+      SENDRAWMSG
+    }>ELSE<{
+      3 BLKDROP	// 
+    }>
+  }>
+}END>c
